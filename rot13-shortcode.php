@@ -45,7 +45,7 @@ function kaw_rot13_shortcode($atts, $content)
         }
     }
     if ($showlink == 'true') {
-        $response .= ' (<a href="http://www.rot13.com">rot13.com</a>) ';
+        $response .= ' (<a href="http://www.rot13.com">rot13.com</a>)';
     }
     $response .= '</span>';
     return $response;
