@@ -29,16 +29,12 @@ add_shortcode('rot13', 'kaw_rot13_shortcode');
 function kaw_rot13_shortcode($atts, $content)
 {
     extract(shortcode_atts(array(
-        'showlink' => false,
-        'animate' => false
+        'showlink' => 'true'
     ), $atts));
-    // $atts ideas:
-    // - Whether to omit the "rot13.com" link next to the text
-    // - Whether to animate the decoding of the string one letter at a time
-    // - Whether to include the JavaScript decoding function at all
 
     $html_tag_pattern = '/(<[^>]*>)/';
     $strings = preg_split($html_tag_pattern, $content, -1, PREG_SPLIT_DELIM_CAPTURE);
+
     $response = '<span class="rot13">';
     foreach ($strings as $text) {
         // Don't encode HTML tags
@@ -48,7 +44,7 @@ function kaw_rot13_shortcode($atts, $content)
             $response .= str_rot13($text);
         }
     }
-    if ($showlink) {
+    if ($showlink == 'true') {
         $response .= ' (<a href="http://www.rot13.com">rot13.com</a>) ';
     }
     $response .= '</span>';
