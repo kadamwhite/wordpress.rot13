@@ -3,7 +3,7 @@
 Plugin Name: Rot13 Spoiler Obfuscator
 Plugin URI: (in progress)
 Description: <a href="http://rot13.com/">Rot13</a> encoding is a quick and easy way to obfuscate or disguise text on your website. By rotating (rot) each letter 13 characters forward in the alphabet, you can easily <a href="http://gameshelf.jmac.org/2012/04/lets-use-rot13-for-game-spoilers/">discuss spoilers</a> without bothering readers who don't want to be spoiled. Just enclose the text you want to hide with the [rot13]shortcode[/rot13].
-Version: 0.1.0
+Version: 0.2.0
 Author: K.Adam White
 Author URI: http://www.kadamwhite.com
 License: GPLv2 or later
@@ -26,16 +26,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 add_shortcode('rot13', 'kaw_rot13_shortcode');
 
-function kaw_rot13_shortcode($atts, $content)
+function kaw_rot13_shortcode($atts, $content = null)
 {
     extract(shortcode_atts(array(
         'showlink' => 'true'
     ), $atts));
 
+    // Apply any nested shortcodes before we encode
+    $content = do_shortcode($content);
+
     $html_tag_pattern = '/(<[^>]*>)/';
     $strings = preg_split($html_tag_pattern, $content, -1, PREG_SPLIT_DELIM_CAPTURE);
 
     $response = '<span class="rot13">';
+
     foreach ($strings as $text) {
         // Don't encode HTML tags
         if (preg_match($html_tag_pattern, $text)) {
@@ -44,9 +48,11 @@ function kaw_rot13_shortcode($atts, $content)
             $response .= str_rot13($text);
         }
     }
+
     if ($showlink == 'true') {
         $response .= ' (<a href="http://www.rot13.com">rot13.com</a>)';
     }
+
     $response .= '</span>';
     return $response;
 }
