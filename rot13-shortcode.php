@@ -49,12 +49,18 @@ function kaw_rot13_shortcode($atts, $content = null)
         }
     }
 
-    if ($showlink == 'true') {
-        $response .= ' (<a href="http://www.rot13.com">rot13.com</a>)';
-    }
-
     $response .= '</span>';
+
+    $response .= kaw_rot13_get_decode_link($showlink);
+
     return $response;
+}
+
+wp_enqueue_script('jquery.rot13', plugins_url().'/rot13-shortcode/scripts/jquery.rot13.min.js', array('jquery') );
+wp_enqueue_script('rot13-shortcode', plugins_url().'/rot13-shortcode/scripts/rot13-shortcode.js', array('jquery', 'jquery.rot13') );
+
+function kaw_rot13_get_decode_link($showlink) {
+    return ($showlink == 'true') ? ' (<a class="rot13-decode" href="http://www.rot13.com">rot13.com</a>)' : '';
 }
 
 ?>
